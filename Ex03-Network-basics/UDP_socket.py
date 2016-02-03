@@ -4,8 +4,8 @@ import socket
 import select
 
 UDP_PORT_IP = 30000
-UDP_PORT = 20008
-UDP_IP = "129.241.187.156"
+UDP_PORT = 20009
+UDP_IP = "129.241.187.144"
 buffer_size = 1024
 
 
@@ -15,6 +15,8 @@ def socket_send(sock, msg):
 def socket_receive(sock):
 	data, addr = sock.recvfrom(buffer_size)
 	print data
+	print addr
+	
 
 def main():
 	#localIP = socket.gethostbyname(socket.gethostname())
@@ -23,10 +25,9 @@ def main():
 
 	sock.bind((UDP_IP, UDP_PORT))
 
-	msg = 'Hello world'
+	msg = 'Ey, this broadcast is sponsored by Erlend gangstaboy'
 
 	socket_send(sock, msg)
-	socket_receive(sock)
 	sock.close()
 
 main()
