@@ -5,7 +5,7 @@ import select
 
 UDP_PORT_IP = 30000
 UDP_PORT = 20009
-UDP_IP = "129.241.187.144"
+UDP_IP = "129.241.187.156"
 buffer_size = 1024
 
 
