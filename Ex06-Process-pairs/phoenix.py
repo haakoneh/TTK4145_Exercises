@@ -1,41 +1,48 @@
+from socket import *
+import subprocess
 import os
-import msgClass
 import time
 
-UDP_PORT = 20009
-UDP_IP = "129.241.187.156"
-buffer_size = 1024
+UDP_IP = "localhost"
+UDP_PORT = 30000
+
+
+backup = socket(AF_INET, SOCK_DGRAM)
+backup.bind((UDP_IP, UDP_PORT))
+backup.settimeout(1.5)
 
 
 def createBackup():
-	os.system('python phoenix.py')
+	#print subprocess.check_output("python phoenix.py", shell=True)
+	os.system("gnome-terminal -e 'python phoenix.py'")
 
 
-def main():
-	msg = msgClass.MessageClass(1, UDP_PORT, UDP_IP, buffer_size)
+#Stay in this loop while main is running break after timeout
+recvCount = 0
+print 'Entering backuploop'
+while True:
+	try:
+		recvCount = backup.recv(100)
+	except timeout:
+		print 'Timout detected'
+		backup.close()
+		createBackup()
+		break
 
-	recvCount, prevRecvCount = 0, 0
+mainSocket  = socket(AF_INET, SOCK_DGRAM)
+ 
+count = int(recvCount)
+
+print'MainProcess:'
+while True:
+	count += 1
+	print count
+
+	mainSocket.sendto(str(count), (UDP_IP, UDP_PORT))
+	time.sleep(1)
 
 
-	#passive backup loop
-	while True:
-		recvCount = int(msg.retrieveMsg())
-		if(recvCount == 0):
-			#Main has died
-			createBackup()
-			break
+	#send to backup
 
-		prevRecvCount = recvCount
 
-	counter = prevRecvCount
-
-	#Active main loop
-	while True:
-		print counter
-		counter += 1
-		msg.setMsg(str(counter))
-		msg.sendMsg()
-		time.sleep(1)
-
-main()
 
