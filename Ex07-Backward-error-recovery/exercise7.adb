@@ -20,6 +20,17 @@ procedure exercise7 is
         begin
             ------------------------------------------
             -- PART 3: Complete the exit protocol here
+			
+			if Finished'Count = N - 1 then 
+				Should_Commit := not Aborted;
+				Finished_Gate_Open := True;
+			end if;
+
+			if Finished'Count = 0 then 
+				Should_Commit := True;
+				Aborted := False;
+				Finished_Gate_Open := False;
+			end if;
             ------------------------------------------
         end Finished;
 
@@ -43,6 +54,13 @@ procedure exercise7 is
     begin
         -------------------------------------------
         -- PART 1: Create the transaction work here
+        if Random(Gen) > Error_Rate then
+        	delay Duration(2.0 + 2.0*Random(Gen));
+			return x + 10;
+        else 
+			delay Duration(0.5*Random(Gen));
+			raise Count_Failed;
+        end if;
         -------------------------------------------
     end Unreliable_Slow_Add;
 
@@ -62,7 +80,14 @@ procedure exercise7 is
             Round_Num := Round_Num + 1;
 
             ---------------------------------------
-            -- PART 2: Do the transaction work here             
+            -- PART 2: Do the transaction work here
+			begin 
+				Num := Unreliable_Slow_Add(Prev);
+			exception
+				when Count_Failed =>
+					Manager.Signal_Abort;
+			end;
+			Manager.Finished;
             ---------------------------------------
             
             if Manager.Commit = True then
@@ -73,6 +98,7 @@ procedure exercise7 is
                              " to" & Integer'Image(Prev));
                 -------------------------------------------
                 -- PART 2: Roll back to previous value here
+				Num := Prev;
                 -------------------------------------------
             end if;
 
