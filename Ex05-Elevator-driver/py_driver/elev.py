@@ -32,7 +32,7 @@ class Elevator:
 		else:
 			io.setBit(OUTPUT.MOTORDIR, OUTPUT.MOTOR_DOWN)
 		sleep(0.02)
-		io.write_analog(OUTPUT.MOTOR, 2048)
+		io.writeAnalog(OUTPUT.MOTOR, 2048)
 
 	def setButtonLamp(self, floor, buttonType, value):
 		assert(floor >= 0), "ERR_ floor < 0"
