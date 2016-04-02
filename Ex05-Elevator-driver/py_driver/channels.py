@@ -57,8 +57,8 @@ class OUTPUT:
     LIGHT_DOWN3    = 0x300+5
     LIGHT_DOWN4    = 0x300+4
     DOOR_OPEN      = 0x300+3
-    FLOOR_IND1     = 0x300+1
-    FLOOR_IND2     = 0x300+0
+    FLOOR_IND1     = 0x300+0
+    FLOOR_IND2     = 0x300+1
 
     PORT0          = 1
     MOTOR          = 0x100+0
